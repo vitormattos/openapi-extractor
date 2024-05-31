@@ -768,6 +768,8 @@ foreach ($routes as $scope => $scopeRoutes) {
 			$bodyParameters = [];
 			$parameters = [];
 
+			$verb = strtolower($route->verb);
+
 			foreach ($queryParameters as $queryParameter) {
 				// Non-atomic types have to be put into the body as the serialization is too complex for query parameters
 				// Booleans also have to be in the body because for query parameters 0/1 would have to be used which is not ergonomic.
@@ -780,7 +782,7 @@ foreach ($routes as $scope => $scopeRoutes) {
 					$queryParameter->type->allOf !== null;
 				$required = !$queryParameter->type->nullable && !$queryParameter->type->hasDefaultValue;
 
-				if ($isBodyParameter) {
+				if ($isBodyParameter && $verb !== 'get') {
 					$bodyParameters[$queryParameter->name] = $queryParameter->type->toArray();
 					if ($required) {
 						$requiredBodyParameters[] = $queryParameter->name;
