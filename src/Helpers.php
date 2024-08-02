@@ -275,6 +275,16 @@ class Helpers {
 		return $refs;
 	}
 
+	public static function mergeUsedRefs(array $usedSchemas, array $target): array {
+		foreach ($target as $contentData) {
+			if (isset($contentData['schema']) && is_array($contentData['schema'])) {
+				$newSchemas = Helpers::collectUsedRefs($contentData['schema']);
+				$usedSchemas = array_merge($usedSchemas, $newSchemas);
+			}
+		}
+		return $usedSchemas;
+	}
+
 	/**
 	 * @throws LoggerException
 	 * @throws UnsupportedExprException

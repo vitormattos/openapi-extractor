@@ -937,25 +937,12 @@ foreach ($scopePaths as $scope => $paths) {
 		foreach ($paths as $url => $urlRoutes) {
 			foreach ($urlRoutes as $httpMethod => $routeData) {
 				foreach ($routeData['responses'] as $statusCode => $responseData) {
-					if (empty($responseData['content'])) {
-						continue;
-					}
-
-					foreach ($responseData['content'] as $contentType => $contentData) {
-						if (isset($contentData['schema']) && is_array($contentData['schema'])) {
-							$newSchemas = Helpers::collectUsedRefs($contentData['schema']);
-							$usedSchemas = array_merge($usedSchemas, $newSchemas);
-						}
+					if (!empty($responseData['content'])) {
+						$usedSchemas = Helpers::mergeUsedRefs($usedSchemas, $responseData['content']);
 					}
 				}
-				if (empty($routeData['requestBody']['content'])) {
-					continue;
-				}
-				foreach ($routeData['requestBody']['content'] as $contentType => $contentData) {
-					if (isset($contentData['schema']) && is_array($contentData['schema'])) {
-						$newSchemas = Helpers::collectUsedRefs($contentData['schema']);
-						$usedSchemas = array_merge($usedSchemas, $newSchemas);
-					}
+				if (!empty($routeData['requestBody']['content'])) {
+					$usedSchemas = Helpers::mergeUsedRefs($usedSchemas, $routeData['requestBody']['content']);
 				}
 			}
 		}
