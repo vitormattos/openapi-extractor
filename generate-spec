@@ -948,6 +948,15 @@ foreach ($scopePaths as $scope => $paths) {
 						}
 					}
 				}
+				if (empty($routeData['requestBody']['content'])) {
+					continue;
+				}
+				foreach ($routeData['requestBody']['content'] as $contentType => $contentData) {
+					if (isset($contentData['schema']) && is_array($contentData['schema'])) {
+						$newSchemas = Helpers::collectUsedRefs($contentData['schema']);
+						$usedSchemas = array_merge($usedSchemas, $newSchemas);
+					}
+				}
 			}
 		}
 
