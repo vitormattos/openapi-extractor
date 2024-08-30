@@ -67,17 +67,6 @@ class OpenApiType {
 					enum: [0, 1],
 				))->toArray($isParameter);
 			}
-
-			if ($this->type === 'object' || $this->ref !== null || $this->anyOf !== null || $this->allOf !== null) {
-				Logger::warning($this->context, 'Complex types can not be part of query or URL parameters. Falling back to string due to undefined serialization!');
-
-				return (new OpenApiType(
-					context: $this->context,
-					type: 'string',
-					nullable: $this->nullable,
-					description: $this->description,
-				))->toArray($isParameter);
-			}
 		}
 
 		$values = [];
